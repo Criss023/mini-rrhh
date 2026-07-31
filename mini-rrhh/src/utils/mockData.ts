@@ -54,7 +54,7 @@ export const mockEmployees: Employee[] = [
         department: "Tecnología",
         salary: 20000,
         hireDate: "2027-02-02",
-        status: "active",
+        status: "inactive",
         role: "admin",
     },
     {

@@ -1,4 +1,6 @@
 import type { Employee } from "../types";
+import { useState } from "react";
+
 interface EmployeeCardProps {
   employee: Employee;
   onSelect?: (employee: Employee) => void;
@@ -13,17 +15,23 @@ const statusConfig = {
   },
 };
 function EmployeeCard({ employee, onSelect }: EmployeeCardProps) {
+  const [hovered, setHovered] = useState(false);
   const { name, position, department, status, avatarUrl } = employee;
   const statusStyle = statusConfig[status];
   return (
     <div
       onClick={() => onSelect?.(employee)}
+      onMouseEnter={() => setHovered(true)}   
+      onMouseLeave={() => setHovered(false)}
       className={`
 bg-white rounded-xl border border-slate-200 p-5 w-full
 hover:shadow-md hover:border-blue-300
 transition-all duration-200
 ${onSelect ? "cursor-pointer" : ""}
 `}
+style={{
+  transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+}}
     >
       <div className="flex items-center gap-3">
         <div

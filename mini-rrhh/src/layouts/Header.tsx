@@ -5,12 +5,13 @@ import type { User } from "../types";
 interface HeaderProps {
   user?: User;
   onLogout?: () => void;
+  showWelcome?: boolean;
 }
 const navItems = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/empleados", label: "Empleados" },
 ];
-function Header({ user, onLogout }: HeaderProps) {
+function Header({ user, onLogout, showWelcome }: HeaderProps) {
   const { pathname } = useLocation();
   return (
     <header className="bg-brand-800 text-white shadow-md">
@@ -46,6 +47,13 @@ ${
         {/* Usuario y logout */}
         {user && (
           <div className="flex items-center gap-3">
+
+         {/* Mensaje de bienvenida */}
+      {showWelcome && (
+        <span className="hidden md:block text-sm text-white/90 font-medium animate-pulse">
+          Bienvenido!
+        </span>
+      )}
             <span className="hidden md:block text-sm text-white/80">
               {user.name}
             </span>

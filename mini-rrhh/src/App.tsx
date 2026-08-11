@@ -14,6 +14,7 @@ import DashboardPage from "./pages/DashboardPage";
 import EmployeesPage from "./pages/EmployeesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import type { User } from "./types";
+import {useState, useEffect} from "react";
 
 // Layout con Header para páginas autenticadas
 function AppLayout({ children }: { children: ReactNode }) {
@@ -23,6 +24,15 @@ function AppLayout({ children }: { children: ReactNode }) {
   const user = role
     ? ({ id: 1, name, email: "", role, token: "" } as User)
     : undefined;
+  const [showWelcome, setShowWelcome] = useState(true); 
+
+  useEffect(() => {                        
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 5000); // 5 segundos
+    return () => clearTimeout(timer);
+  }, []);
+    
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
@@ -31,7 +41,7 @@ function AppLayout({ children }: { children: ReactNode }) {
   };
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
-      <Header user={user} onLogout={handleLogout} />
+      <Header user={user} onLogout={handleLogout} showWelcome={showWelcome} />
       <main>{children}</main>
     </div>
   );

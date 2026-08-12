@@ -15,7 +15,8 @@ function StatsBadge({ label, value, variant = "blue" }: StatsBadgeProps) {
   return (
     <div
       className={`flex flex-col items-center px-5 py-3 rounded-lg
-bg-white border min-w-[120px] ${style.border}`}
+bg-white border min-w-[120px] ${style.border}
+hover:shadow-lg transition-shadow duration-200`}
     >
       <span className={`text-2xl font-bold ${style.text}`}>{value}</span>
       <span className="text-sm text-slate-500">{label}</span>

@@ -24,14 +24,7 @@ function DashboardPage() {
   return (
     <div style={{ padding: "24px" }}>
       <h2 style={{ color: "#1e293b", marginBottom: "24px" }}>Dashboard</h2>
-      <div
-        style={{
-          display: "flex",
-          gap: "16px",
-          marginBottom: "32px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
         {stats.map((stat) => (
           <div
             key={stat.label}
@@ -39,9 +32,8 @@ function DashboardPage() {
               background: stat.color,
               padding: "24px",
               borderRadius: "12px",
-              minWidth: "160px",
-              flex: 1,
             }}
+            className="flex-1 min-w-[160px]  hover:shadow-lg transition-shadow duration-200"
           >
             <p
               style={{

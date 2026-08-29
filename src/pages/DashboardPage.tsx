@@ -1,77 +1,55 @@
 // src/pages/DashboardPage.tsx
-import { Link } from "react-router-dom";
-import { mockEmployees } from "../utils/mockData";
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { useEmployees } from '../hooks/useEmployees';
+
+const statVariants = {
+  blue: { bg: 'bg-blue-100', text: 'text-blue-800' },
+  green: { bg: 'bg-green-100', text: 'text-green-800' },
+  yellow: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+};
 
 function DashboardPage() {
   const userName = useAuthStore(state => state.user?.name) || 'invitado';
-  const total = mockEmployees.length;
-  const active = mockEmployees.filter((e) => e.status === "active").length;
-  const onLeave = mockEmployees.filter((e) => e.status === "on_leave").length;
+  // Mismos datos que EmployeesPage — TanStack Query comparte el cache entre
+  // ambas pantallas, así que esto no dispara una petición nueva si ya se
+  // cargó la lista sin filtros en otra vista.
+  const { data } = useEmployees({});
+  const employees = data?.data || [];
+  const total = employees.length;
+  const active = employees.filter(e => e.status === 'active').length;
+  const onLeave = employees.filter(e => e.status === 'on_leave').length;
 
   const stats = [
-    {
-      label: "Total empleados",
-      value: total,
-      color: "#dbeafe",
-      textColor: "#1e40af",
-    },
-    { label: "Activos", value: active, color: "#dcfce7", textColor: "#166534" },
-    {
-      label: "En permiso",
-      value: onLeave,
-      color: "#fef9c3",
-      textColor: "#854d0e",
-    },
+    { label: 'Total empleados', value: total, variant: 'blue' as const },
+    { label: 'Activos', value: active, variant: 'green' as const },
+    { label: 'En permiso', value: onLeave, variant: 'yellow' as const },
   ];
+
   return (
-    <div style={{ padding: "24px" }}>
-      <h2 style={{ color: "#1e293b", marginBottom: "24px" }}>Dashboard</h2>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-slate-900 mb-1">Dashboard</h2>
+      <p className="text-slate-500 mb-6">Bienvenido, {userName}</p>
+
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            style={{
-              background: stat.color,
-              padding: "24px",
-              borderRadius: "12px",
-            }}
-            className="flex-1 min-w-[160px]  hover:shadow-lg transition-shadow duration-200"
-          >
-            <p
-              style={{
-                margin: "0 0 4px",
-                color: stat.textColor,
-                fontSize: "14px",
-              }}
+        {stats.map(stat => {
+          const style = statVariants[stat.variant];
+          return (
+            <div
+              key={stat.label}
+              className={`flex-1 min-w-40 p-6 rounded-xl ${style.bg} hover:shadow-lg transition-shadow duration-200`}
             >
-              {stat.label}
-            </p>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "36px",
-                fontWeight: 700,
-                color: stat.textColor,
-              }}
-            >
-              {stat.value}
-            </p>
-          </div>
-        ))}
+              <p className={`mb-1 text-sm ${style.text}`}>{stat.label}</p>
+              <p className={`text-4xl font-bold ${style.text}`}>{stat.value}</p>
+            </div>
+          );
+        })}
       </div>
 
-      <div style={{ display: "flex", gap: "12px" }}>
+      <div className="flex gap-3">
         <Link
           to="/empleados"
-          style={{
-            padding: "10px 20px",
-            background: "#1e40af",
-            color: "white",
-            borderRadius: "6px",
-            textDecoration: "none",
-            fontSize: "14px",
-          }}
+          className="px-5 py-2.5 bg-brand-800 hover:bg-brand-700 text-white rounded-lg text-sm transition-colors"
         >
           Ver empleados →
         </Link>
@@ -79,5 +57,5 @@ function DashboardPage() {
     </div>
   );
 }
-export default DashboardPage;
 
+export default DashboardPage;

@@ -13,29 +13,34 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import EmployeesPage from "./pages/EmployeesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import {useState, useEffect} from "react";
-import { useAuthStore } from './store/authStore';
+import { useState, useEffect } from "react";
+import { useAuthStore } from "./store/authStore";
+import EmployeeDetailPage from "./pages/EmployeeDetailPage";
 
 // Layout con Header para páginas autenticadas
 function AppLayout({ children }: { children: ReactNode }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
-  const [showWelcome, setShowWelcome] = useState(true); 
+  const [showWelcome, setShowWelcome] = useState(true);
 
-  useEffect(() => {                        
+  useEffect(() => {
     const timer = setTimeout(() => {
       setShowWelcome(false);
     }, 5000); // 5 segundos
     return () => clearTimeout(timer);
   }, []);
-    
+
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
-      <Header user={user ?? undefined} onLogout={handleLogout} showWelcome={showWelcome} />
+      <Header
+        user={user ?? undefined}
+        onLogout={handleLogout}
+        showWelcome={showWelcome}
+      />
       <main>{children}</main>
     </div>
   );
@@ -65,6 +70,16 @@ function App() {
             <ProtectedRoute>
               <AppLayout>
                 <EmployeesPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/empleados/:id"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <EmployeeDetailPage />
               </AppLayout>
             </ProtectedRoute>
           }

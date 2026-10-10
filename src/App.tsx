@@ -6,7 +6,6 @@ import {
   Routes,
   Route,
   Navigate,
-  Link,
   useNavigate,
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";

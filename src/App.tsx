@@ -1,15 +1,23 @@
 // src/App.tsx
-import { useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import Header from './layouts/Header';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import EmployeesPage from './pages/EmployeesPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import RoleGuard from './components/RoleGuard';
-import { useAuthStore } from './store/authStore';
+import { useEffect } from "react";
+import type { ReactNode } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Link,
+  useNavigate,
+} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import Header from "./layouts/Header";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import EmployeesPage from "./pages/EmployeesPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RoleGuard from "./components/RoleGuard";
+import { useAuthStore } from "./store/authStore";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Layout con Header para páginas autenticadas
 function AppLayout({ children }: { children: ReactNode }) {
@@ -18,11 +26,11 @@ function AppLayout({ children }: { children: ReactNode }) {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       <Header user={user ?? undefined} onLogout={handleLogout} />
       <main>{children}</main>
     </div>
@@ -30,7 +38,7 @@ function AppLayout({ children }: { children: ReactNode }) {
 }
 
 function App() {
-  const checkTokenValidity = useAuthStore(state => state.checkTokenValidity);
+  const checkTokenValidity = useAuthStore((state) => state.checkTokenValidity);
 
   useEffect(() => {
     checkTokenValidity();
@@ -47,35 +55,36 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         {/* Rutas protegidas */}
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <DashboardPage />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <DashboardPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Solo ADMIN y HR_MANAGER gestionan empleados; EMPLOYEE no entra */}
-        <Route path="/empleados" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <RoleGuard allowedRoles={['ADMIN', 'HR_MANAGER']}>
-                <EmployeesPage />
-              </RoleGuard>
-            </AppLayout>
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/empleados"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <RoleGuard allowedRoles={["ADMIN", "HR_MANAGER"]}>
+                  <EmployeesPage />
+                </RoleGuard>
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Redirigir raíz según autenticación */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         {/* 404 */}
-        <Route path="*" element={
-          <div style={{ minHeight: '100vh', background: '#f8fafc', textAlign: 'center', padding: '80px' }}>
-            <h2 style={{ color: '#1e293b' }}>404: Página no encontrada</h2>
-            <Link to="/dashboard">Volver al inicio</Link>
-          </div>
-        } />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Toaster
@@ -84,16 +93,16 @@ function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            borderRadius: '8px',
-            background: '#1e293b',
-            color: '#f8fafc',
-            fontSize: '14px',
+            borderRadius: "8px",
+            background: "#1e293b",
+            color: "#f8fafc",
+            fontSize: "14px",
           },
           success: {
-            iconTheme: { primary: '#22c55e', secondary: '#f8fafc' },
+            iconTheme: { primary: "#22c55e", secondary: "#f8fafc" },
           },
           error: {
-            iconTheme: { primary: '#ef4444', secondary: '#f8fafc' },
+            iconTheme: { primary: "#ef4444", secondary: "#f8fafc" },
             duration: 6000,
           },
         }}
